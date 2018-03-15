@@ -5,11 +5,10 @@ var router = express.Router();
 
 /* GET books listing. */
 router.get("/", function(req, res) {
-  Book.find({}).exec(function(err,book){
+  Book.find({}).exec(function(err, book) {
     if (err) throw err;
     res.json({ message: "respond with all books" + book });
-  })
-  
+  });
 });
 
 router.get("/:id", function(req, res) {
@@ -30,7 +29,15 @@ router.post("/", function(req, res) {
 });
 
 router.put("/:id", function(req, res) {
-  res.json({ message: `update book with id ${req.params.id}` });
+  Book.findById(`${req.params.id}`, function(err, book) {
+    if (err) throw err;
+    book.title = req.body.Title;
+
+    book.save(function(err) {
+      if (err) throw err;
+      res.json({ message: `update book with id ${req.params.id}` });
+    });
+  });
 });
 
 router.delete("/:id", function(req, res) {
