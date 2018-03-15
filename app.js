@@ -10,6 +10,13 @@ var books = require("./routes/books");
 
 var app = express();
 
+const mongoose = require("mongoose")
+mongoose.connect("mongodb://localhost/booksdb", function(err) {
+  if (err) throw err;
+  console.log("DB connected!");
+});
+
+
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");

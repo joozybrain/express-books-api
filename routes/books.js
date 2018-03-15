@@ -1,4 +1,6 @@
 var express = require("express");
+const mongoose = require("mongoose");
+const Book = require("../models/books_models");
 var router = express.Router();
 
 /* GET books listing. */
@@ -11,7 +13,16 @@ router.get("/:id", function(req, res) {
 });
 
 router.post("/", function(req, res) {
-  res.json({ message: `create new book using data from ${req.body}` });
+  console.log(req.body);
+  let newBook = new Book({
+    title: "Hobbit"
+  });
+  newBook.save(function(err) {
+    if (err) throw err;
+    console.log("book saved");
+  });
+
+  res.json({ message: `create new book using data from ${req.body.body}` });
 });
 
 router.put("/:id", function(req, res) {
