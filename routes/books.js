@@ -5,14 +5,37 @@ var router = express.Router();
 
 /* GET books listing. */
 router.get("/", function(req, res) {
-  Book.find({}).exec(function(err, book) {
+  Book.find({}, function(err, books) {
     if (err) throw err;
-    res.json({ message: "respond with all books" + book });
+    res.json({ message: "respond with all books", books: books });
   });
 });
 
+router.get("/", function(req, res) {
+  Book.find({})
+    .then(function(books) {
+      res.json({ message: "respond with all books", books: books });
+    })
+    .catch(function(err) {
+      res.json(err);
+    });
+});
+
+router.get("/", async function(req, res) {
+  const books = await Book.find({});
+
+  try {
+    res.json({ message: "respond with all books", books: books });
+  } catch (err) {
+    res.json(err);
+  }
+});
+
 router.get("/:id", function(req, res) {
-  res.json({ message: `get book with id ${req.params.id}` });
+  Book.findById(req.params.id, function(err, book) {
+    if (err) throw err;
+    res.json({ message: `get book with id ${book}` });
+  });
 });
 
 router.post("/", function(req, res) {
@@ -29,19 +52,20 @@ router.post("/", function(req, res) {
 });
 
 router.put("/:id", function(req, res) {
-  Book.findById(`${req.params.id}`, function(err, book) {
+  Book.findByIdAndUpdate(req.params.id, { title: req.body.Title }, function(
+    err,
+    book
+  ) {
     if (err) throw err;
-    book.title = req.body.Title;
-
-    book.save(function(err) {
-      if (err) throw err;
-      res.json({ message: `update book with id ${req.params.id}` });
-    });
+    res.json({ message: `update book with id ${req.params.id}` });
   });
 });
 
 router.delete("/:id", function(req, res) {
-  res.json({ message: `delete book with id ${req.params.id}` });
+  Book.findByIdAndRemove(req.params.id, function(err, book) {
+    if (err) throw err;
+    res.json({ message: `delete book with id ${req.params.id}` });
+  });
 });
 
 module.exports = router;
