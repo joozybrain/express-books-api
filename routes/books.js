@@ -5,7 +5,11 @@ var router = express.Router();
 
 /* GET books listing. */
 router.get("/", function(req, res) {
-  res.json({ message: "respond with all books" });
+  Book.find({}).exec(function(err,book){
+    if (err) throw err;
+    res.json({ message: "respond with all books" + book });
+  })
+  
 });
 
 router.get("/:id", function(req, res) {
@@ -13,16 +17,16 @@ router.get("/:id", function(req, res) {
 });
 
 router.post("/", function(req, res) {
-  console.log(req.body);
   let newBook = new Book({
-    title: "Hobbit"
+    title: req.body.Title
   });
+
   newBook.save(function(err) {
     if (err) throw err;
     console.log("book saved");
   });
 
-  res.json({ message: `create new book using data from ${req.body.body}` });
+  res.json({ message: `create new book using data from ${req.body.Title}` });
 });
 
 router.put("/:id", function(req, res) {
