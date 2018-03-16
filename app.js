@@ -10,12 +10,15 @@ var books = require("./routes/books");
 
 var app = express();
 
-const mongoose = require("mongoose")
-mongoose.connect("mongodb://localhost/booksdb", function(err) {
-  if (err) throw err;
-  console.log("DB connected!");
-});
-
+const mongoose = require("mongoose");
+mongoose.connect(
+  "mongodb://heroku_stbprrnw:omln948vjn0g1see5hvme6ju5c@ds115569.mlab.com:15569/heroku_stbprrnw",
+  function(err) {
+    //mongoose.connect("mongodb://localhost/booksdb", function(err) {
+    if (err) throw err;
+    console.log("DB connected!");
+  }
+);
 
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
