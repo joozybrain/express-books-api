@@ -4,6 +4,9 @@ var favicon = require("serve-favicon");
 var logger = require("morgan");
 var cookieParser = require("cookie-parser");
 var bodyParser = require("body-parser");
+if (process.env.NODE_ENV !== "production") {
+  require("dotenv").load();
+}
 
 var index = require("./routes/index");
 var books = require("./routes/books");
@@ -11,10 +14,9 @@ var books = require("./routes/books");
 var app = express();
 
 const mongoose = require("mongoose");
-mongoose.connect(
-  "mongodb://heroku_stbprrnw:omln948vjn0g1see5hvme6ju5c@ds115569.mlab.com:15569/heroku_stbprrnw",
-  function(err) {
-    //mongoose.connect("mongodb://localhost/booksdb", function(err) {
+const dbUrl = process.env.MONGODB_URI;
+
+mongoose.connect(dbUrl, function(err) {
     if (err) throw err;
     console.log("DB connected!");
   }
